@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+*.tsbuildinfo
+
+data/events.json
+data/.events.*.tmp
+
+*.log
+.DS_Store
