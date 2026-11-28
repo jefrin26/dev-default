@@ -261,13 +261,13 @@ a:hover {
 
 .server-address {
   font-family: var(--serif);
-  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-size: clamp(0.95rem, 6vw, 3.1rem);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.1;
   color: var(--text);
   text-align: center;
-  text-wrap: balance;
+  white-space: nowrap;
 }
 
 .server-subtitle {
@@ -392,6 +392,62 @@ a:hover {
 .event-list {
   display: grid;
   gap: 1rem;
+}
+
+.event-group {
+  margin-top: 1.75rem;
+}
+
+.event-group .event-list {
+  margin-top: 1rem;
+}
+
+.event-group-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.event-group-summary::-webkit-details-marker {
+  display: none;
+}
+
+.event-group-summary::marker {
+  content: "";
+}
+
+.event-group-summary:hover {
+  color: var(--accent);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.2s var(--ease);
+}
+
+.event-group[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.event-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .event-card {

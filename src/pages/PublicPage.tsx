@@ -2,8 +2,93 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { EventCard } from "../components/EventCard";
 import { Header } from "../components/Header";
 import { api, ApiError } from "../lib/api";
+import { deriveStatus } from "../lib/time";
 import { useServerTime } from "../lib/useServerTime";
-import type { EventsResponse } from "../types";
+import type { EventsResponse, ServerEvent } from "../types";
+
+type EventGroups = Record<
+  "in_progress" | "scheduled" | "completed" | "cancelled",
+  ServerEvent[]
+>;
+
+interface EventListProps {
+  events: ServerEvent[];
+  now: number;
+}
+
+function EventList({ events, now }: EventListProps) {
+  if (events.length === 0) {
+    return null;
+  }
+  return (
+    <div className="event-list">
+      {events.map((event) => (
+        <EventCard key={event.id} event={event} now={now} />
+      ))}
+    </div>
+  );
+}
+
+function OngoingGroup({ events, now }: EventListProps) {
+  if (events.length === 0) {
+    return null;
+  }
+  return (
+    <section className="event-group event-group--fixed" aria-label="In progress">
+      <h3 className="event-group-heading">
+        In progress <span className="count">{events.length}</span>
+      </h3>
+      <EventList events={events} now={now} />
+    </section>
+  );
+}
+
+interface CollapsibleGroupProps extends EventListProps {
+  title: string;
+  defaultOpen?: boolean;
+}
+
+function CollapsibleGroup({
+  title,
+  events,
+  now,
+  defaultOpen = false,
+}: CollapsibleGroupProps) {
+  const details = useRef<HTMLDetailsElement>(null);
+
+  // Keep <details> uncontrolled so polling/ticking cannot re-open a group the
+  // visitor has collapsed.
+  useEffect(() => {
+    if (details.current) {
+      details.current.open = defaultOpen;
+    }
+  }, [defaultOpen]);
+
+  if (events.length === 0) {
+    return null;
+  }
+
+  return (
+    <details ref={details} className="event-group">
+      <summary className="event-group-summary">
+        <span>
+          {title} <span className="count">{events.length}</span>
+        </span>
+        <svg
+          className="chevron"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          aria-hidden="true"
+        >
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+      </summary>
+      <EventList events={events} now={now} />
+    </details>
+  );
+}
 
 export function PublicPage() {
   const [data, setData] = useState<EventsResponse | null>(null);
@@ -56,6 +141,13 @@ export function PublicPage() {
 
   const now = useServerTime(data?.serverNow ?? null);
   const events = data?.events ?? [];
+  const groups = events.reduce<EventGroups>(
+    (result, event) => {
+      result[deriveStatus(event, now)].push(event);
+      return result;
+    },
+    { in_progress: [], scheduled: [], completed: [], cancelled: [] },
+  );
 
   return (
     <div className="site">
@@ -94,11 +186,10 @@ export function PublicPage() {
             </div>
           ) : null}
 
-          <div className="event-list">
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} now={now} />
-            ))}
-          </div>
+          <OngoingGroup events={groups.in_progress} now={now} />
+          <CollapsibleGroup title="Upcoming" events={groups.scheduled} now={now} defaultOpen />
+          <CollapsibleGroup title="Completed" events={groups.completed} now={now} />
+          <CollapsibleGroup title="Cancelled" events={groups.cancelled} now={now} />
         </section>
       </main>
     </div>
