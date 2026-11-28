@@ -1,0 +1,10 @@
+node_modules
+dist
+*.tsbuildinfo
+
+.env
+data/events.json
+data/.events.*.tmp
+
+.git
+*.log

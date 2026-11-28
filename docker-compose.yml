@@ -6,11 +6,19 @@ services:
       - traefik-network
     ports:
       - "9300:8080"
+    env_file:
+      - .env
+    environment:
+      PORT: "8080"
+      DATA_DIR: /app/data
+    volumes:
+      - ./data:/app/data
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.my-ip-router.rule=Host(`dev.enyard.in`) || Host(`10.0.0.7`)"
       - "traefik.http.routers.my-ip-router.entrypoints=web"
-      - "traefik.http.services.dev-default.loadbalancer.server.port=8080" # Your app's internal port
+      - "traefik.http.services.dev-default.loadbalancer.server.port=8080"
+    restart: unless-stopped
 
 networks:
   traefik-network:

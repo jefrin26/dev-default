@@ -25,37 +25,7 @@
   <body>
     <div class="ambient ambient-a" aria-hidden="true"></div>
     <div class="ambient ambient-b" aria-hidden="true"></div>
-
-    <div class="site">
-      <header class="header">
-        <div class="brand" aria-hidden="true">
-          <span class="brand-dot"></span>
-        </div>
-
-        <button
-          id="theme-toggle"
-          class="theme-toggle"
-          type="button"
-          aria-label="Switch to night mode"
-          aria-pressed="false"
-        >
-          <span class="toggle-track" aria-hidden="true">
-            <svg class="icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="12" r="4"></circle>
-              <path d="M12 2.5v2.5M12 19v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2.5 12H5M19 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"></path>
-            </svg>
-            <svg class="icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"></path>
-            </svg>
-            <span class="toggle-thumb"></span>
-          </span>
-          <span class="toggle-label" id="theme-toggle-label">Night</span>
-        </button>
-      </header>
-
-      <main class="main">
-        <p class="server-address">Dev-Server@dev.enyard.in</p>
-      </main>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
