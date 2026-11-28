@@ -1,5 +1,5 @@
 services:
-  my-service:
+  dev-default:
     build: .
     image: dev-default:latest
     networks:
@@ -10,7 +10,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.my-ip-router.rule=Host(`dev.enyard.in`) || Host(`10.0.0.7`)"
       - "traefik.http.routers.my-ip-router.entrypoints=web"
-      - "traefik.http.services.my-service.loadbalancer.server.port=8080" # Your app's internal port
+      - "traefik.http.services.dev-default.loadbalancer.server.port=8080" # Your app's internal port
 
 networks:
   traefik-network:
